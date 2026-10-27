@@ -1,0 +1,24 @@
+[package]
+name = "cargo-lean"
+version = "0.0.1"
+edition = "2024"
+description = "Validate and manage Cargo.toml package exclude lists"
+license = "MIT"
+repository = "https://github.com/raphaelstolt/cargo-lean"
+readme = "README.md"
+keywords = ["cargo", "lint", "cli", "package", "exclude"]
+categories = ["command-line-utilities"]
+exclude = [".gitignore", ".github/", "tests/", "CONTRIBUTING.md", "Justfile", "CHANGELOG.md", "RELEASE.md"]
+
+[dependencies]
+anyhow = "1.0.104"
+clap = { version = "4.6.7", features = ["derive"] }
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+toml = "0.8"
+glob = "0.3"
+
+[dev-dependencies]
+assert_cmd = "2.2.2"
+predicates = "3.1.4"
+tempfile = "3.20"
