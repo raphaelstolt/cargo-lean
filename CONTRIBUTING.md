@@ -44,6 +44,14 @@ Check for common mistakes and improve Rust idioms:
 just clippy
 ```
 
+### Validating leanness
+
+Validating `package.exclude` list:
+
+```bash
+just lean
+```
+
 ### Testing
 
 Run the full test suite:
