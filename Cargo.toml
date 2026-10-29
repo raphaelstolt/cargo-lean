@@ -1,6 +1,6 @@
 [package]
 name = "cargo-lean"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 description = "Validate and manage Cargo.toml package exclude lists"
 license = "MIT"

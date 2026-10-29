@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-10-30
+
 ### Changed
 - `--patterns` / `-p` option now accepts a single space-separated string (e.g., `-p "tests/ docs/ PROMPTS.md"`) instead
 of multiple repeated flags.
