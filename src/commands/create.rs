@@ -15,9 +15,9 @@ pub struct CreateArgs {
     #[arg(long, default_value = "text")]
     pub format: OutputFormat,
 
-    /// Custom exclude patterns (can be specified multiple times)
+    /// Custom exclude patterns (space-separated)
     #[arg(short = 'p', long)]
-    pub patterns: Vec<String>,
+    pub patterns: Option<String>,
 
     /// Dry run: show what would be added without modifying the file
     #[arg(long)]
@@ -57,16 +57,12 @@ impl CreateArgs {
         let gitignore_entries = gitignore::read_gitignore(manifest_dir);
 
         // Determine patterns to check (normalize by stripping trailing slashes)
-        let patterns: Vec<String> = if !self.patterns.is_empty() {
-            self.patterns
-                .iter()
-                .map(|p| utils::normalize_pattern(p))
-                .collect()
-        } else {
-            utils::DEFAULT_EXCLUDE_PATTERNS
+        let patterns: Vec<String> = match &self.patterns {
+            Some(p) => p.split_whitespace().map(utils::normalize_pattern).collect(),
+            None => utils::DEFAULT_EXCLUDE_PATTERNS
                 .iter()
                 .map(|s| s.to_string())
-                .collect()
+                .collect(),
         };
 
         // Find patterns that exist in the repo but are not excluded and not gitignored

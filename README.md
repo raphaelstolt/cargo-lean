@@ -105,7 +105,7 @@ All commands support these common options and flags:
 |---------------------|--------------------------------------------------|
 | `-m, --manifest-path <PATH>` | Path to `Cargo.toml` (default: `Cargo.toml`) |
 | `--format <FORMAT>` | Output format: `text` or `json` (default: `text`) |
-| `-p, --patterns <PATTERN>`   | Custom artefact patterns (can be repeated)     |
+| `-p, --patterns <PATTERN>`   | Custom artefact patterns (space-separated)     |
 | `--dry-run`         | Preview changes without modifying files (`create`, `update`) |
 | `--diff`            | Show diff-style output (`lint`)                  |
 
@@ -131,7 +131,7 @@ Note: `.git` is not included as it cannot be tracked by Git.
 Override them with `--patterns`:
 
 ```bash
-cargo-lean lint -p .idea/ -p target/
+cargo-lean lint -p ".idea/ target/"
 ```
 
 ## `.gitignore` awareness

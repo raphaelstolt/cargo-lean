@@ -646,9 +646,7 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg("custom-artifact")
-        .arg("-p")
-        .arg("target")
+        .arg("custom-artifact target")
         .assert()
         .success();
 
@@ -698,9 +696,7 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg("custom-artifact")
-        .arg("-p")
-        .arg("target")
+        .arg("custom-artifact target")
         .assert()
         .success();
 
@@ -774,9 +770,7 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg("custom-artifact")
-        .arg("-p")
-        .arg("target")
+        .arg("custom-artifact target")
         .assert()
         .failure()
         .stdout(predicate::str::contains("custom-artifact"));
@@ -831,9 +825,7 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg("custom-artifact/")
-        .arg("-p")
-        .arg("target/")
+        .arg("custom-artifact/ target/")
         .assert()
         .failure()
         .stdout(predicate::str::contains("custom-artifact"))
@@ -858,9 +850,7 @@ exclude = [".idea", "target"]
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg(".idea/")
-        .arg("-p")
-        .arg("target/")
+        .arg(".idea/ target/")
         .assert()
         .success();
 }
@@ -881,9 +871,7 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg("custom-artifact/")
-        .arg("-p")
-        .arg("target/")
+        .arg("custom-artifact/ target/")
         .assert()
         .success();
 
@@ -909,9 +897,7 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg("custom-artifact/")
-        .arg("-p")
-        .arg("target/")
+        .arg("custom-artifact/ target/")
         .assert()
         .success();
 
