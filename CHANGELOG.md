@@ -15,11 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- **`lint` command**: Checks whether all unnecessary repository artefacts are listed in `Cargo.toml` `[package].exclude`.
-- **`create` command**: Adds missing artefacts to the `Cargo.toml` exclude list, preserving existing entries.
-- **`update` command**: Replaces the `Cargo.toml` exclude list with only the artefacts that currently exist in the repository.
-- **`--format json` option**: All commands support JSON output for scripting and interoperability.
-- **`--diff` flag** (lint command): Shows a diff-style preview of which artefacts would be added to the exclude list.
-- **`--dry-run` flag** (create/update commands): Preview changes without modifying the `Cargo.toml` file.
-- **`--patterns` / `-p` option**: Override the default list of artefact patterns with custom ones.
-- **`--manifest-path` / `-m` option**: Specify a custom path to the `Cargo.toml` file.
+- __`lint` command__: Checks whether all unnecessary repository artefacts are listed in `Cargo.toml` `[package].exclude`.
+- __`create` command__: Adds missing artefacts to the `Cargo.toml` exclude list, preserving existing entries.
+- __`update` command__: Replaces the `Cargo.toml` exclude list with only the artefacts that currently exist in the repository.
+- __`--format json` option__: All commands support JSON output for scripting and interoperability.
+- __`--diff` flag__ (lint command): Shows a diff-style preview of which artefacts would be added to the exclude list.
+- __`--dry-run` flag__ (create/update commands): Preview changes without modifying the `Cargo.toml` file.
+- __`--patterns` / `-p` option__: Override the default list of artefact patterns with custom ones.
+- __`--manifest-path` / `-m` option__: Specify a custom path to the `Cargo.toml` file.

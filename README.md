@@ -62,7 +62,7 @@ cargo-lean lint --diff
 cargo-lean lint --format json
 ```
 
-**`--diff` flag:** Shows which artefacts would be added to the exclude list, using `+` prefixes (similar to a unified
+__`--diff` flag:__ Shows which artefacts would be added to the exclude list, using `+` prefixes (similar to a unified
 diff). This is useful for previewing changes before running `create`.
 
 ### `create` — Add missing exclusions
@@ -138,9 +138,9 @@ cargo-lean lint -p .idea/ -p target/
 All commands automatically read the `.gitignore` file in the manifest directory. Artefacts already covered by
 `.gitignore` entries are excluded from the results, since Git will not track them anyway.
 
-- **`lint`**: Will not flag artefacts that are already in `.gitignore`.
-- **`create`**: Will not add artefacts that are already in `.gitignore` to the exclude list.
-- **`update`**: Will not include artefacts that are already in `.gitignore` in the new exclude list.
+- __`lint`__: Will not flag artefacts that are already in `.gitignore`.
+- __`create`__: Will not add artefacts that are already in `.gitignore` to the exclude list.
+- __`update`__: Will not include artefacts that are already in `.gitignore` in the new exclude list.
 
 When using `--format json`, the `gitignored` array lists which patterns were covered by `.gitignore`.
 
@@ -170,25 +170,13 @@ All commands support `--format json` for scripting and automation. Example `lint
 
 ## Development
 
-Build the project in debug mode:
-
-```bash
-cargo build
-```
-
-Build an optimized binary:
-
-```bash
-cargo build --release
-```
-
-For code quality guidelines (formatting, linting, and testing), please see [CONTRIBUTING.md](CONTRIBUTING.md).
+See [CONTRIBUTING.md](CONTRIBUTING.md) for development instructions.
 
 ## License
 
 This project is licensed under the MIT license. Please see [LICENSE.md](LICENSE.md) for more details.
 
-## Shameless self-plug
+## Related projects
 
-Also check out the [lean-package-validator](https://github.com/raphaelstolt/lean-package-validator), a companion tool
-for validating and managing lean package distribution archives for `PHP` packages.
+- [lean-package-validator](https://github.com/raphaelstolt/lean-package-validator) — The `PHP` equivalent.
+- [py-lean](https://github.com/raphaelstolt/py-lean) — The `Python` equivalent.

@@ -1,6 +1,13 @@
 # Contributing
 
-Thank you for your interest in contributing to **cargo-lean**.
+Thank you for your interest in contributing to `cargo-lean`.
+
+## Installation from source
+
+```bash
+git clone git@github.com:raphaelstolt/cargo-lean.git && cd cargo-lean
+cargo install --path .
+```
 
 ## Code Quality
 
@@ -71,4 +78,4 @@ reflect the change, such as:
 ## Commit Messages
 
 Please follow [Conventional Commits](https://www.conventionalcommits.org/) for all commit messages. This keeps the history readable
-and enables automated changelog generation.
+and enables automated changelog generation. You can inspect the message schema for this project via `git log --oneline -n 10`.
