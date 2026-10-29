@@ -49,16 +49,18 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact"]);
 
     cmd()
         .arg("lint")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("--diff")
+        .arg("-p")
+        .arg("custom-artifact")
         .assert()
         .failure()
-        .stdout(predicate::str::contains("+ .idea"));
+        .stdout(predicate::str::contains("+ custom-artifact"));
 }
 
 #[test]
@@ -69,12 +71,14 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact"]);
 
     cmd()
         .arg("lint")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
+        .arg("-p")
+        .arg("custom-artifact")
         .assert()
         .failure();
 }
@@ -106,7 +110,7 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact"]);
 
     cmd()
         .arg("lint")
@@ -114,6 +118,8 @@ edition = "2024"
         .arg(dir.path().join("Cargo.toml"))
         .arg("--format")
         .arg("json")
+        .arg("-p")
+        .arg("custom-artifact")
         .assert()
         .failure()
         .stdout(predicate::str::contains(r#""valid": false"#));
@@ -201,7 +207,7 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact"]);
 
     cmd()
         .arg("lint")
@@ -209,10 +215,12 @@ edition = "2024"
         .arg(dir.path().join("Cargo.toml"))
         .arg("--format")
         .arg("json")
+        .arg("-p")
+        .arg("custom-artifact")
         .assert()
         .failure()
         .stdout(predicate::str::contains(r#""missing""#))
-        .stdout(predicate::str::contains(".idea"));
+        .stdout(predicate::str::contains("custom-artifact"));
 }
 
 // ---------------------------------------------------------------------------
@@ -255,18 +263,20 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact"]);
 
     cmd()
         .arg("create")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
+        .arg("-p")
+        .arg("custom-artifact")
         .assert()
         .success();
 
     let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
     assert!(content.contains("exclude"));
-    assert!(content.contains(".idea"));
+    assert!(content.contains("custom-artifact"));
 }
 
 #[test]
@@ -376,17 +386,19 @@ version = "0.1.0"
 edition = "2024"
 exclude = ["old-artifact"]
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact"]);
 
     cmd()
         .arg("update")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
+        .arg("-p")
+        .arg("custom-artifact")
         .assert()
         .success();
 
     let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
-    assert!(content.contains(".idea"));
+    assert!(content.contains("custom-artifact"));
     assert!(!content.contains("old-artifact"));
 }
 
@@ -423,18 +435,20 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea", "target"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact"]);
 
     cmd()
         .arg("update")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
+        .arg("-p")
+        .arg("custom-artifact")
         .assert()
         .success();
 
     let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
     assert!(content.contains("exclude"));
-    assert!(content.contains(".idea"));
+    assert!(content.contains("custom-artifact"));
 }
 
 // ---------------------------------------------------------------------------
@@ -567,20 +581,24 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    // target/ exists and is in .gitignore; .idea exists and is not
-    setup_test_dir(dir.path(), cargo_toml, &["target", ".idea"]);
+    // target/ exists and is in .gitignore; custom-artifact exists and is not
+    setup_test_dir(dir.path(), cargo_toml, &["target", "custom-artifact"]);
     setup_gitignore(dir.path(), "/target\n");
 
     cmd()
         .arg("create")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
+        .arg("-p")
+        .arg("custom-artifact")
+        .arg("-p")
+        .arg("target")
         .assert()
         .success();
 
     let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
-    // .idea should be added
-    assert!(content.contains(".idea"));
+    // custom-artifact should be added
+    assert!(content.contains("custom-artifact"));
     // target should NOT be added (it's in .gitignore)
     assert!(!content.contains("target"));
 }
@@ -615,20 +633,24 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    // target/ exists and is in .gitignore; .idea exists and is not
-    setup_test_dir(dir.path(), cargo_toml, &["target", ".idea"]);
+    // target/ exists and is in .gitignore; custom-artifact exists and is not
+    setup_test_dir(dir.path(), cargo_toml, &["target", "custom-artifact"]);
     setup_gitignore(dir.path(), "/target\n");
 
     cmd()
         .arg("update")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
+        .arg("-p")
+        .arg("custom-artifact")
+        .arg("-p")
+        .arg("target")
         .assert()
         .success();
 
     let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
-    // .idea should be in the exclude list
-    assert!(content.contains(".idea"));
+    // custom-artifact should be in the exclude list
+    assert!(content.contains("custom-artifact"));
     // target should NOT be in the exclude list (it's in .gitignore)
     assert!(!content.contains("target"));
 }
@@ -684,20 +706,24 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &["target", ".idea"]);
+    setup_test_dir(dir.path(), cargo_toml, &["target", "custom-artifact"]);
     setup_gitignore(
         dir.path(),
         "# This is a comment\n\n/target\n# Another comment\n",
     );
 
-    // target is gitignored, .idea is not — lint should fail for .idea
+    // target is gitignored, custom-artifact is not — lint should fail for custom-artifact
     cmd()
         .arg("lint")
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
+        .arg("-p")
+        .arg("custom-artifact")
+        .arg("-p")
+        .arg("target")
         .assert()
         .failure()
-        .stdout(predicate::str::contains(".idea"));
+        .stdout(predicate::str::contains("custom-artifact"));
 }
 
 #[test]
@@ -740,7 +766,7 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea", "target"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact", "target"]);
     setup_gitignore(dir.path(), ".gitignore\n");
 
     // Patterns with trailing slashes should be normalized
@@ -749,12 +775,12 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg(".idea/")
+        .arg("custom-artifact/")
         .arg("-p")
         .arg("target/")
         .assert()
         .failure()
-        .stdout(predicate::str::contains(".idea"))
+        .stdout(predicate::str::contains("custom-artifact"))
         .stdout(predicate::str::contains("target"));
 }
 
@@ -791,7 +817,7 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea", "target"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact", "target"]);
     setup_gitignore(dir.path(), ".gitignore\n");
 
     cmd()
@@ -799,7 +825,7 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg(".idea/")
+        .arg("custom-artifact/")
         .arg("-p")
         .arg("target/")
         .assert()
@@ -807,7 +833,7 @@ edition = "2024"
 
     let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
     // Should be added without trailing slashes
-    assert!(content.contains(r#""#) && content.contains(".idea"));
+    assert!(content.contains(r#""#) && content.contains("custom-artifact"));
     assert!(content.contains("target"));
 }
 
@@ -819,7 +845,7 @@ name = "test"
 version = "0.1.0"
 edition = "2024"
 "#;
-    setup_test_dir(dir.path(), cargo_toml, &[".idea", "target"]);
+    setup_test_dir(dir.path(), cargo_toml, &["custom-artifact", "target"]);
     setup_gitignore(dir.path(), ".gitignore\n");
 
     cmd()
@@ -827,13 +853,13 @@ edition = "2024"
         .arg("--manifest-path")
         .arg(dir.path().join("Cargo.toml"))
         .arg("-p")
-        .arg(".idea/")
+        .arg("custom-artifact/")
         .arg("-p")
         .arg("target/")
         .assert()
         .success();
 
     let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
-    assert!(content.contains(".idea"));
+    assert!(content.contains("custom-artifact"));
     assert!(content.contains("target"));
 }

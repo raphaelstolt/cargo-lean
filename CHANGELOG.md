@@ -10,6 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Global `.gitignore` support: Artefact detection now accounts for patterns in the global gitignore excludes file
   (configured via core.excludesFile or the XDG default at ~/.config/git/ignore), in addition to the local .gitignore.
+- Tilde expansion: Paths containing `~` in `core.excludesFile` (e.g. `~/.config/git/.gitignore`) are now
+  correctly resolved to the user's home directory.
+- Case-insensitive matching: Exclude patterns are now compared case-insensitively, so `changelog.md` matches
+  `CHANGELOG.md` in the exclude list, handling differences between filesystem casing and pattern names.
 
 ## [0.1.0] - 2026-10-27
 

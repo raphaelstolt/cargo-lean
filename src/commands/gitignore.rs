@@ -28,6 +28,22 @@ fn parse_gitignore_file(path: &Path) -> Vec<String> {
         .collect()
 }
 
+/// Expand `~` to the user's home directory, if present at the start of the path.
+fn expand_tilde(path: &str) -> std::path::PathBuf {
+    if let Some(rest) = path.strip_prefix("~/") {
+        if let Ok(home) = std::env::var("HOME") {
+            return std::path::PathBuf::from(home).join(rest);
+        }
+    }
+    // Also handle bare `~`
+    if path == "~" {
+        if let Ok(home) = std::env::var("HOME") {
+            return std::path::PathBuf::from(home);
+        }
+    }
+    std::path::PathBuf::from(path)
+}
+
 /// Try to resolve the global gitignore excludes file path.
 ///
 /// Checks `git config --global --get core.excludesFile` first, then falls back to the XDG
@@ -43,7 +59,7 @@ fn global_excludes_file() -> Option<std::path::PathBuf> {
     {
         let path_str = String::from_utf8_lossy(&output.stdout).trim().to_string();
         if !path_str.is_empty() {
-            let path = std::path::PathBuf::from(path_str);
+            let path = expand_tilde(&path_str);
             if path.exists() {
                 return Some(path);
             }

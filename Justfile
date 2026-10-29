@@ -19,7 +19,7 @@ run:
 	cargo run
 
 lean:
-    cargo install --path . && cargo-lean lint
+	cargo install --path . && cargo-lean lint
 
 package:
 	cargo package --allow-dirty --list

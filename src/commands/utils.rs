@@ -78,14 +78,16 @@ pub fn get_current_excludes(cargo_toml: &toml::Value) -> Vec<String> {
 }
 
 /// Check if a pattern is already excluded in the current Cargo.toml
+/// Uses case-insensitive comparison to handle filesystems where casing differs
+/// between the exclude list and actual file names.
 pub fn is_excluded(pattern: &str, current_excludes: &[String]) -> bool {
     current_excludes.iter().any(|excluded| {
-        // Direct match
-        excluded == pattern
+        // Case-insensitive direct match
+        excluded.eq_ignore_ascii_case(pattern)
             // If the excluded pattern ends with /, it matches directories
-            || (excluded.ends_with('/') && pattern == excluded.trim_end_matches('/'))
+            || (excluded.ends_with('/') && pattern.eq_ignore_ascii_case(excluded.trim_end_matches('/')))
             // If our pattern ends with / (directory), match against exclude without slash
-            || (pattern.ends_with('/') && pattern.trim_end_matches('/') == excluded)
+            || (pattern.ends_with('/') && pattern.trim_end_matches('/').eq_ignore_ascii_case(excluded))
             // Check if the pattern matches a glob pattern in excludes
             || matches_glob(pattern, excluded)
     })
