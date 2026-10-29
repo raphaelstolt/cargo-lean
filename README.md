@@ -42,7 +42,7 @@ cargo-lean <COMMAND>
 |----------|--------------------------------------------------------------------|
 | `lint`   | Check if all repository artefacts are excluded.                    |
 | `create` | Add missing artefacts to the exclude list.                         |
-| `update` | Replace the exclude list with only the artefacts that exist now.   |
+| `update` | Replace the exclude list, preserving custom entries that still exist. |
 
 ### `lint` — Check exclude list completeness
 
@@ -82,8 +82,9 @@ cargo-lean create --format json
 
 ### `update` — Replace exclude list
 
-Replaces the entire exclude list with only the artefacts that currently exist in the repository. This removes stale
-entries and adds new ones.
+Replaces the entire exclude list with the artefacts that currently exist in the repository, merging built-in default
+patterns with any custom entries already in `[package].exclude`. This removes stale entries (files no longer present)
+and adds new ones, while preserving custom exclude entries that still exist.
 
 ```bash
 # Dry run: see what would change

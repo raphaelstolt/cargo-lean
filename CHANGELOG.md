@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   correctly resolved to the user's home directory.
 - Case-insensitive matching: Exclude patterns are now compared case-insensitively, so `changelog.md` matches
   `CHANGELOG.md` in the exclude list, handling differences between filesystem casing and pattern names.
+- `update` command preserves custom exclude entries: Running `update` now keeps entries already in
+  `[package].exclude` that still exist in the repository, even if they are not in the built-in default patterns.
+  Stale entries (files no longer present) are still removed as expected.
 
 ## [0.1.0] - 2026-10-27
 

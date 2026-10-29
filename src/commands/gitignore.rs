@@ -30,16 +30,16 @@ fn parse_gitignore_file(path: &Path) -> Vec<String> {
 
 /// Expand `~` to the user's home directory, if present at the start of the path.
 fn expand_tilde(path: &str) -> std::path::PathBuf {
-    if let Some(rest) = path.strip_prefix("~/") {
-        if let Ok(home) = std::env::var("HOME") {
-            return std::path::PathBuf::from(home).join(rest);
-        }
+    if let Some(rest) = path.strip_prefix("~/")
+        && let Ok(home) = std::env::var("HOME")
+    {
+        return std::path::PathBuf::from(home).join(rest);
     }
     // Also handle bare `~`
-    if path == "~" {
-        if let Ok(home) = std::env::var("HOME") {
-            return std::path::PathBuf::from(home);
-        }
+    if path == "~"
+        && let Ok(home) = std::env::var("HOME")
+    {
+        return std::path::PathBuf::from(home);
     }
     std::path::PathBuf::from(path)
 }

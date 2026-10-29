@@ -72,7 +72,7 @@ impl UpdateArgs {
         };
 
         // Find patterns that exist in the repo and are not gitignored
-        let new_excludes: Vec<String> = patterns
+        let mut new_excludes: Vec<String> = patterns
             .iter()
             .filter(|pattern| {
                 utils::exists_in_repo(manifest_dir, pattern.as_str())
@@ -80,6 +80,20 @@ impl UpdateArgs {
             })
             .map(|s| s.to_string())
             .collect();
+
+        // Preserve existing configured exclude entries that still exist in the repo
+        // and are not already in the new list — this keeps custom patterns the user
+        // added beyond the built-in defaults.
+        for existing in &current_excludes {
+            if !new_excludes
+                .iter()
+                .any(|n| n.eq_ignore_ascii_case(existing))
+                && utils::exists_in_repo(manifest_dir, existing)
+                && !gitignore::is_gitignored(existing, &gitignore_entries)
+            {
+                new_excludes.push(existing.clone());
+            }
+        }
 
         // Find patterns covered only by .gitignore
         let gitignored: Vec<String> = patterns

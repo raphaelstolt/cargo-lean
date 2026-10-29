@@ -451,6 +451,62 @@ edition = "2024"
     assert!(content.contains("custom-artifact"));
 }
 
+#[test]
+fn update_preserves_custom_exclude_entries() {
+    let dir = tempfile::tempdir().unwrap();
+    let cargo_toml = r#"[package]
+name = "test"
+version = "0.1.0"
+edition = "2024"
+exclude = ["my-custom-file.txt"]
+"#;
+    // Both the custom exclude entry and a default pattern exist in the repo
+    // Using CHANGELOG.md (a built-in default) and my-custom-file.txt (a custom entry)
+    setup_test_dir(
+        dir.path(),
+        cargo_toml,
+        &["my-custom-file.txt", "CHANGELOG.md"],
+    );
+
+    cmd()
+        .arg("update")
+        .arg("--manifest-path")
+        .arg(dir.path().join("Cargo.toml"))
+        .assert()
+        .success();
+
+    let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
+    // CHANGELOG.md is a built-in default that exists, so it should be added
+    assert!(content.contains("CHANGELOG.md"));
+    // my-custom-file.txt is not a built-in default but exists in the repo and is already excluded,
+    // so it should be preserved
+    assert!(content.contains("my-custom-file.txt"));
+}
+
+#[test]
+fn update_removes_custom_exclude_when_file_gone() {
+    let dir = tempfile::tempdir().unwrap();
+    let cargo_toml = r#"[package]
+name = "test"
+version = "0.1.0"
+edition = "2024"
+exclude = ["my-custom-file.txt"]
+"#;
+    // my-custom-file.txt does NOT exist in the repo
+    setup_test_dir(dir.path(), cargo_toml, &[]);
+
+    cmd()
+        .arg("update")
+        .arg("--manifest-path")
+        .arg(dir.path().join("Cargo.toml"))
+        .assert()
+        .success();
+
+    let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
+    // my-custom-file.txt no longer exists, so it should be removed
+    assert!(!content.contains("my-custom-file.txt"));
+}
+
 // ---------------------------------------------------------------------------
 // General CLI tests
 // ---------------------------------------------------------------------------
