@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-29
+
 ### Fixed
 - Global `.gitignore` support: Artefact detection now accounts for patterns in the global gitignore excludes file
   (configured via core.excludesFile or the XDG default at ~/.config/git/ignore), in addition to the local .gitignore.
