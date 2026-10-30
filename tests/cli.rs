@@ -905,3 +905,98 @@ edition = "2024"
     assert!(content.contains("custom-artifact"));
     assert!(content.contains("target"));
 }
+
+// ---------------------------------------------------------------------------
+// Dynamic .toml file detection tests
+// ---------------------------------------------------------------------------
+
+#[test]
+fn lint_detects_toml_files_excluding_cargo_toml() {
+    let dir = tempfile::tempdir().unwrap();
+    let cargo_toml = r#"[package]
+name = "test"
+version = "0.1.0"
+edition = "2024"
+"#;
+    // release.toml and .cargo/config.toml exist; Cargo.toml should be excluded
+    setup_test_dir(
+        dir.path(),
+        cargo_toml,
+        &["release.toml", ".cargo/config.toml"],
+    );
+    setup_gitignore(dir.path(), ".gitignore\n");
+
+    // release.toml should be detected as missing from exclude list
+    cmd()
+        .arg("lint")
+        .arg("--manifest-path")
+        .arg(dir.path().join("Cargo.toml"))
+        .assert()
+        .failure()
+        .stdout(predicate::str::contains("release.toml"));
+}
+
+#[test]
+fn lint_passes_when_toml_files_are_excluded() {
+    let dir = tempfile::tempdir().unwrap();
+    let cargo_toml = r#"[package]
+name = "test"
+version = "0.1.0"
+edition = "2024"
+exclude = ["release.toml"]
+"#;
+    setup_test_dir(dir.path(), cargo_toml, &["release.toml"]);
+    setup_gitignore(dir.path(), ".gitignore\n");
+
+    cmd()
+        .arg("lint")
+        .arg("--manifest-path")
+        .arg(dir.path().join("Cargo.toml"))
+        .assert()
+        .success();
+}
+
+#[test]
+fn create_adds_discovered_toml_files() {
+    let dir = tempfile::tempdir().unwrap();
+    let cargo_toml = r#"[package]
+name = "test"
+version = "0.1.0"
+edition = "2024"
+"#;
+    setup_test_dir(dir.path(), cargo_toml, &["release.toml"]);
+    setup_gitignore(dir.path(), ".gitignore\n");
+
+    cmd()
+        .arg("create")
+        .arg("--manifest-path")
+        .arg(dir.path().join("Cargo.toml"))
+        .assert()
+        .success();
+
+    let content = fs::read_to_string(dir.path().join("Cargo.toml")).unwrap();
+    assert!(content.contains("release.toml"));
+}
+
+#[test]
+fn lint_detects_hidden_toml_files() {
+    let dir = tempfile::tempdir().unwrap();
+    let cargo_toml = r#"[package]
+name = "test"
+version = "0.1.0"
+edition = "2024"
+"#;
+    // Hidden (dot-prefixed) .toml files should also be detected for exclusion.
+    setup_test_dir(dir.path(), cargo_toml, &[".hidden.toml", "release.toml"]);
+    setup_gitignore(dir.path(), ".gitignore\n");
+
+    // Both release.toml and .hidden.toml should be detected
+    cmd()
+        .arg("lint")
+        .arg("--manifest-path")
+        .arg(dir.path().join("Cargo.toml"))
+        .assert()
+        .failure()
+        .stdout(predicate::str::contains("release.toml"))
+        .stdout(predicate::str::contains(".hidden.toml"));
+}

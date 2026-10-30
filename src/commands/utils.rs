@@ -37,6 +37,33 @@ pub const DEFAULT_EXCLUDE_PATTERNS: &[&str] = &[
     "docker-compose.yaml",
 ];
 
+/// Find all `.toml` files in the manifest directory (excluding `Cargo.toml`).
+///
+/// Scans the top-level directory of the manifest for files with a `.toml` extension
+/// and returns them as a sorted list of filenames, excluding `Cargo.toml` itself.
+/// Hidden (dot-prefixed) files are included. This allows the tool to dynamically detect
+/// configuration files like `release.toml` or `.hidden.toml` that should be excluded
+/// from the package.
+pub fn find_toml_files(manifest_dir: &Path) -> Vec<String> {
+    let mut toml_files = Vec::new();
+
+    if let Ok(entries) = std::fs::read_dir(manifest_dir) {
+        for entry in entries.filter_map(|e| e.ok()) {
+            let path = entry.path();
+            if path.is_file()
+                && let Some(name) = path.file_name().and_then(|n| n.to_str())
+                && name != "Cargo.toml"
+                && name.ends_with(".toml")
+            {
+                toml_files.push(name.to_string());
+            }
+        }
+    }
+
+    toml_files.sort();
+    toml_files
+}
+
 /// Normalize a pattern by stripping trailing slashes.
 ///
 /// Users may specify directory patterns with a trailing slash (e.g., `-p target/`),

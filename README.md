@@ -126,6 +126,10 @@ Justfile, justfile, Makefile, makefile,
 .dockerignore, Dockerfile, docker-compose.yml, docker-compose.yaml
 ```
 
+In addition, any `.toml` files found in the manifest directory are automatically detected and recommended for exclusion.
+This catches configuration files like `release.toml` without manual configuration. `Cargo.toml` itself is excluded from
+this dynamic detection.
+
 Note: `.git` is not included as it cannot be tracked by Git.
 
 Override them with `--patterns`:

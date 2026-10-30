@@ -53,17 +53,32 @@ impl LintArgs {
         let current_excludes = utils::get_current_excludes(&cargo_toml);
 
         // Read .gitignore entries
-        let manifest_dir = manifest_path.parent().unwrap_or(Path::new("."));
+        // Use current directory when manifest_path has no parent (e.g., default "Cargo.toml")
+        let manifest_dir = manifest_path
+            .parent()
+            .and_then(|p| {
+                if p.as_os_str().is_empty() {
+                    None
+                } else {
+                    Some(p)
+                }
+            })
+            .unwrap_or(Path::new("."));
         let gitignore_entries = gitignore::read_gitignore(manifest_dir);
 
         // Determine patterns to check (normalize by stripping trailing slashes)
-        let patterns: Vec<String> = match &self.patterns {
+        let mut patterns: Vec<String> = match &self.patterns {
             Some(p) => p.split_whitespace().map(utils::normalize_pattern).collect(),
             None => utils::DEFAULT_EXCLUDE_PATTERNS
                 .iter()
                 .map(|s| s.to_string())
                 .collect(),
         };
+
+        // Dynamically discover .toml files (excluding Cargo.toml)
+        if self.patterns.is_none() {
+            patterns.extend(utils::find_toml_files(manifest_dir));
+        }
 
         // Find patterns that exist in the repo but are not excluded and not gitignored
         let existing_unexcluded: Vec<String> = patterns
