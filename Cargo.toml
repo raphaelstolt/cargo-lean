@@ -8,7 +8,7 @@ repository = "https://github.com/raphaelstolt/cargo-lean"
 readme = "README.md"
 keywords = ["cargo", "lint", "cli", "package", "exclude"]
 categories = ["command-line-utilities"]
-exclude = [".gitignore", ".github/", "tests/", "CONTRIBUTING.md", "Justfile", "CHANGELOG.md", "RELEASE.md", "release.toml"]
+exclude = [".gitignore", ".github/", "tests/", "CONTRIBUTING.md", "Justfile", "CHANGELOG.md", "RELEASE.md", "release.toml", "rust-toolchain.toml"]
 
 [dependencies]
 anyhow = "1.0.104"
