@@ -22,3 +22,7 @@ jobs:
         run: cargo clippy -- -D warnings
       - name: Run tests
         run: cargo test
+      - name: Run lean check
+        run: cargo run -- lint
+      - name: Run package check
+        run: cargo package --allow-dirty --list
