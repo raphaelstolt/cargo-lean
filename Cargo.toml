@@ -8,7 +8,7 @@ repository = "https://github.com/raphaelstolt/cargo-lean"
 readme = "README.md"
 keywords = ["cargo", "lint", "cli", "package", "exclude"]
 categories = ["command-line-utilities"]
-exclude = [".gitignore", ".github/", "tests/", "CONTRIBUTING.md", "Justfile", "CHANGELOG.md", "RELEASE.md"]
+exclude = [".gitignore", ".github/", "tests/", "CONTRIBUTING.md", "Justfile", "CHANGELOG.md", "RELEASE.md", "release.toml"]
 
 [dependencies]
 anyhow = "1.0.104"
@@ -20,5 +20,6 @@ glob = "0.3"
 
 [dev-dependencies]
 assert_cmd = "2.2.2"
+cargo-release = "0.25.22"
 predicates = "3.1.4"
 tempfile = "3.20"

@@ -1,37 +1,50 @@
 # Release process
 
-This document describes how to release a new version of `cargo-leean` to [crates.io](https://crates.io).
+This document describes how to release a new version of `cargo-lean` to [crates.io](https://crates.io).
+
+## Prerequisites
+
+- Install [`just`](https://github.com/casey/just) if you haven't already.
+- Ensure you have a crates.io API token configured (e.g., via `~/.cargo/credentials.toml`).
+- Be on the `main` branch with a clean working tree.
 
 ## Release steps
 
-1. **Update the version** in `Cargo.toml`:
-   ```toml
-   version = "0.1.0"
-   ```
+1. Update `CHANGELOG.md` with the new version and a summary of changes.
 
-2. **Update `CHANGELOG.md`** with the new version and a summary of changes.
 
-3. **Commit your changes**:
+2. Run the pre-release checks:
    ```bash
-   git add Cargo.toml CHANGELOG.md
-   git commit -m "dist: ship version 0.1.0"
-   git push origin main
+   just check
    ```
+   This runs `fmt`, `clippy`, `lean`, and `test`.
 
-4. **Wait for CI to pass** — Ensure the CI workflow (fmt, clippy, tests, build) passes on your commit.
 
-5. **Create and push a version tag**:
+3. Preview the release:
    ```bash
-   git tag v0.1.0
-   git push origin v0.1.0
+   just release-dry-run
+   ```
+   To preview a specific release level:
+   ```bash
+   just release-dry-run minor
    ```
 
-## What happens next
+4. Execute the release:
+   ```bash
+   just release
+   ```
+   To release a specific level:
+   ```bash
+   just release minor
+   ```
 
-When you push a `v*` tag, the [Release](.github/workflows/release.yml) GitHub Actions workflow automatically:
+## What `cargo-release` does
 
-1. Checks out the code at the tagged commit
-2. Verifies that the tag version matches the version in `Cargo.toml`
-3. Runs `cargo publish` to publish the package to crates.io
+The `just release` command invokes `cargo release --execute`, which automatically:
 
-If the tag version does not match `Cargo.toml`, the workflow will fail with an error message.
+1. Bumps the version in `Cargo.toml`
+2. Runs pre-release checks (`cargo package --locked`)
+3. Commits the version bump with the message `dist: ship version <version>`
+4. Creates and pushes a `v<version>` tag
+
+Configuration is stored in `release.toml` (e.g., allowed branches, tag format, commit messages).
