@@ -20,6 +20,6 @@ glob = "0.3"
 
 [dev-dependencies]
 assert_cmd = "2.2.2"
-cargo-release = "0.25.22"
+cargo-release = "1.1.6"
 predicates = "3.1.4"
 tempfile = "3.20"
