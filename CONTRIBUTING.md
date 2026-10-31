@@ -44,7 +44,7 @@ just check
 
 This project uses [Just](https://just.systems/) to manage common development commands.
 
-See all available tasks with:
+See all available recipes with:
 
 ```bash
 just --list
